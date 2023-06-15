@@ -23,7 +23,11 @@
       </el-table-column>
     </el-table>
     <el-dialog v-model="dialogFormVisible" title="Update dish data">
-      <DishForm :items="form" @handleFormDialog="dialogFormVisible = false" />
+      <DishForm
+        :items="form"
+        @handleFormDialog="dialogFormVisible = false"
+        :key="componentKey"
+      />
     </el-dialog>
   </div>
 </template>
@@ -57,14 +61,21 @@ interface Item {
 
 // Edit dish
 const dialogFormVisible = ref(false);
+const componentKey = ref(0);
 const handleEdit = (index: number, row: Item) => {
-  console.log("edit dish");
+  form = row;
+
   dialogFormVisible.value = true;
+  componentKey.value += 1;
 };
 
 // Delete dish
 const handleDelete = async (index: number, row: Item) => {
-  console.log("delete dish");
+  await dishesStore.deleteItem(row["_id"]);
 };
 </script>
-<style scoped></style>
+<style scoped>
+.dialog-footer button:first-child {
+  margin-right: 10px;
+}
+</style>
